@@ -1,0 +1,25 @@
+## .NET
+bin/
+obj/
+*.user
+*.suo
+.vs/
+*.DotSettings.user
+
+## Node / Angular
+node_modules/
+dist/
+.angular/
+
+## Secrets
+.env
+appsettings.*.local.json
+**/secrets.json
+
+## OS
+Thumbs.db
+.DS_Store
+
+## IDE
+.idea/
+*.swp

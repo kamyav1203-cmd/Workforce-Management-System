@@ -1,0 +1,81 @@
+<mat-sidenav-container class="layout-container">
+  <mat-sidenav mode="side" opened class="sidenav">
+
+    <!-- Brand -->
+    <div class="brand">
+      <div class="brand-icon-wrap">
+        <mat-icon>groups</mat-icon>
+      </div>
+      <div class="brand-text">
+        <div class="brand-name">WMS</div>
+        <div class="brand-sub">Workforce Hub</div>
+      </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="nav-section">
+      <div class="nav-section-label">Overview</div>
+      <a class="nav-item" routerLink="/dashboard" routerLinkActive="active-link">
+        <mat-icon>dashboard</mat-icon> Dashboard
+      </a>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-section-label">People</div>
+      @for (item of peopleItems; track item.path) {
+        @if (hasAccess(item.roles)) {
+          <a class="nav-item" [routerLink]="item.path" routerLinkActive="active-link">
+            <mat-icon>{{ item.icon }}</mat-icon> {{ item.label }}
+          </a>
+        }
+      }
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-section-label">Operations</div>
+      @for (item of opsItems; track item.path) {
+        @if (hasAccess(item.roles)) {
+          <a class="nav-item" [routerLink]="item.path" routerLinkActive="active-link">
+            <mat-icon>{{ item.icon }}</mat-icon> {{ item.label }}
+          </a>
+        }
+      }
+    </div>
+
+    @if (isAdmin()) {
+      <div class="nav-section">
+        <div class="nav-section-label">Admin</div>
+        @for (item of adminItems; track item.path) {
+          @if (hasAccess(item.roles)) {
+            <a class="nav-item" [routerLink]="item.path" routerLinkActive="active-link">
+              <mat-icon>{{ item.icon }}</mat-icon> {{ item.label }}
+            </a>
+          }
+        }
+      </div>
+    }
+
+    <!-- Footer user info -->
+    <div class="sidenav-footer">
+      <div class="user-avatar">{{ userInitial }}</div>
+      <div class="user-details">
+        <div class="user-name">{{ user?.username }}</div>
+        <div class="user-role">{{ user?.role }}</div>
+      </div>
+      <button mat-icon-button (click)="logout()" title="Logout">
+        <mat-icon>logout</mat-icon>
+      </button>
+    </div>
+
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <mat-toolbar class="toolbar">
+      <span class="toolbar-title">Workforce Management System</span>
+      <span class="toolbar-date">{{ today | date:'EEE, dd MMM yyyy' }}</span>
+    </mat-toolbar>
+    <main class="content">
+      <router-outlet></router-outlet>
+    </main>
+  </mat-sidenav-content>
+</mat-sidenav-container>

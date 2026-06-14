@@ -1,0 +1,70 @@
+trigger: none
+
+resources:
+  pipelines:
+    - pipeline: build
+      source: WMS-Build
+      trigger:
+        branches: [main]
+
+stages:
+  - stage: DeployStaging
+    jobs:
+      - deployment: DeployAPIStaging
+        environment: staging
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - download: build
+                  artifact: api
+                - task: AzureWebApp@1
+                  inputs:
+                    azureSubscription: 'Azure-Service-Connection'
+                    appType: 'webApp'
+                    appName: 'wms-api-staging'
+                    package: '$(Pipeline.Workspace)/build/api/**/*.zip'
+
+      - deployment: DeployFrontendStaging
+        environment: staging
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - download: build
+                  artifact: frontend
+                - task: AzureStaticWebApp@0
+                  inputs:
+                    app_location: 'WMS.Frontend/dist/wms.frontend'
+                    skip_app_build: true
+
+  - stage: DeployProduction
+    dependsOn: DeployStaging
+    jobs:
+      - deployment: DeployAPIProduction
+        environment: production
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - download: build
+                  artifact: api
+                - task: AzureWebApp@1
+                  inputs:
+                    azureSubscription: 'Azure-Service-Connection'
+                    appType: 'webApp'
+                    appName: 'wms-api-prod'
+                    package: '$(Pipeline.Workspace)/build/api/**/*.zip'
+
+      - deployment: DeployFrontendProduction
+        environment: production
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - download: build
+                  artifact: frontend
+                - task: AzureStaticWebApp@0
+                  inputs:
+                    app_location: 'WMS.Frontend/dist/wms.frontend'
+                    skip_app_build: true

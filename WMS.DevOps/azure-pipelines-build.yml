@@ -1,0 +1,38 @@
+trigger:
+  branches:
+    include: [main, dev, feature/*]
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  buildConfiguration: 'Release'
+
+stages:
+  - stage: BuildAndTest
+    jobs:
+      - job: Backend
+        steps:
+          - task: UseDotNet@2
+            inputs: { packageType: 'sdk', version: '8.0.x' }
+          - script: dotnet restore WMS.slnx
+            displayName: Restore
+          - script: dotnet build WMS.slnx --configuration $(buildConfiguration) --no-restore
+            displayName: Build
+          - script: dotnet test WMS.Tests/WMS.Tests.csproj --configuration $(buildConfiguration) --no-build --logger trx
+            displayName: Run xUnit Tests
+          - script: dotnet publish WMS.API/WMS.API.csproj -c $(buildConfiguration) -o $(Build.ArtifactStagingDirectory)/api
+            displayName: Publish API
+          - publish: $(Build.ArtifactStagingDirectory)/api
+            artifact: api
+
+      - job: Frontend
+        steps:
+          - task: NodeTool@0
+            inputs: { versionSpec: '20.x' }
+          - script: npm ci
+            workingDirectory: WMS.Frontend
+          - script: npm run build
+            workingDirectory: WMS.Frontend
+          - publish: WMS.Frontend/dist
+            artifact: frontend

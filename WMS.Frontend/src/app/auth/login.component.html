@@ -1,0 +1,70 @@
+<div class="login-page">
+  <div class="login-container">
+    <div class="login-card">
+      <div class="login-branding">
+        <div class="logo-wrap">
+          <mat-icon>groups</mat-icon>
+        </div>
+        <h1>WMS</h1>
+        <p class="tagline">Workforce Management System</p>
+      </div>
+
+      <div class="login-header">
+        <h2>Sign In</h2>
+        <p class="subtitle">Please enter your credentials to access your dashboard</p>
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" class="login-form">
+        <div class="field-group">
+          <label>Username</label>
+          <div class="input-wrap" [class.error-input]="form.get('username')?.invalid && form.get('username')?.touched">
+            <mat-icon>person_outline</mat-icon>
+            <input formControlName="username" placeholder="Enter your username" autocomplete="username">
+          </div>
+        </div>
+        <div class="field-group">
+          <label>Password</label>
+          <div class="input-wrap" [class.error-input]="form.get('password')?.invalid && form.get('password')?.touched">
+            <mat-icon>lock_outline</mat-icon>
+            <input [type]="showPass ? 'text' : 'password'" formControlName="password" placeholder="Enter your password" autocomplete="current-password">
+            <button type="button" class="toggle-pass" (click)="showPass = !showPass">
+              <mat-icon>{{ showPass ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        @if (error) {
+          <div class="error-msg">
+            <mat-icon>error_outline</mat-icon> {{ error }}
+          </div>
+        }
+
+        <button type="submit" class="btn-signin" [disabled]="loading || form.invalid">
+          @if (loading) {
+            <span class="spinner"></span> Signing in...
+          } @else {
+            <mat-icon>login</mat-icon> Sign In
+          }
+        </button>
+      </form>
+
+      <div class="demo-creds">
+        <p class="demo-label">Quick Sign-In</p>
+        <div class="cred-grid">
+          <div class="cred-item" (click)="fillCreds('admin','Admin@123')">
+            <mat-icon>admin_panel_settings</mat-icon>
+            <span>Admin</span>
+          </div>
+          <div class="cred-item" (click)="fillCreds('manager','Manager@123')">
+            <mat-icon>manage_accounts</mat-icon>
+            <span>Manager</span>
+          </div>
+          <div class="cred-item" (click)="fillCreds('employee','Employee@123')">
+            <mat-icon>person</mat-icon>
+            <span>Employee</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

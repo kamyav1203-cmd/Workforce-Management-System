@@ -1,0 +1,61 @@
+<div class="page-header"><div><h1>Attendance Management</h1><p class="header-sub">Track check-ins, check-outs and timesheets</p></div></div>
+
+<mat-card class="action-card">
+  <h3>Check In / Out</h3>
+  <form [formGroup]="checkInForm" class="action-row">
+    <mat-form-field appearance="outline">
+      <mat-label>Employee</mat-label>
+      <mat-select formControlName="empId">
+        @for (e of employees; track e.employeeId) {
+          <mat-option [value]="e.employeeId">{{ e.firstName }} {{ e.lastName }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Work Mode</mat-label>
+      <mat-select formControlName="workMode">
+        <mat-option value="WFO">WFO</mat-option>
+        <mat-option value="WFH">WFH</mat-option>
+        <mat-option value="Hybrid">Hybrid</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <button mat-raised-button color="primary" (click)="checkIn()" [disabled]="openRecord">
+      <mat-icon>login</mat-icon> Check In
+    </button>
+    <button mat-raised-button color="accent" (click)="checkOut()" [disabled]="!openRecord">
+      <mat-icon>logout</mat-icon> Check Out
+    </button>
+  </form>
+</mat-card>
+
+<mat-card class="filter-card">
+  <h3>Monthly View & Timesheet</h3>
+  <form [formGroup]="filterForm" class="action-row">
+    <mat-form-field appearance="outline">
+      <mat-label>Employee</mat-label>
+      <mat-select formControlName="empId">
+        @for (e of employees; track e.employeeId) {
+          <mat-option [value]="e.employeeId">{{ e.firstName }} {{ e.lastName }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="outline"><mat-label>Month</mat-label><input matInput type="number" formControlName="month" min="1" max="12"></mat-form-field>
+    <mat-form-field appearance="outline"><mat-label>Year</mat-label><input matInput type="number" formControlName="year"></mat-form-field>
+    <button mat-raised-button (click)="loadMonthly()">View Monthly</button>
+    <button mat-raised-button color="primary" (click)="downloadReport()">
+      <mat-icon>download</mat-icon> Timesheet Report
+    </button>
+  </form>
+</mat-card>
+
+<table mat-table [dataSource]="records" class="data-table">
+  <ng-container matColumnDef="attendanceDate"><th mat-header-cell *matHeaderCellDef>Date</th><td mat-cell *matCellDef="let r">{{ r.attendanceDate | date:'mediumDate' }}</td></ng-container>
+  <ng-container matColumnDef="employeeName"><th mat-header-cell *matHeaderCellDef>Employee</th><td mat-cell *matCellDef="let r">{{ r.employeeName }}</td></ng-container>
+  <ng-container matColumnDef="checkIn"><th mat-header-cell *matHeaderCellDef>Check In</th><td mat-cell *matCellDef="let r">{{ r.checkIn | date:'shortTime' }}</td></ng-container>
+  <ng-container matColumnDef="checkOut"><th mat-header-cell *matHeaderCellDef>Check Out</th><td mat-cell *matCellDef="let r">{{ r.checkOut ? (r.checkOut | date:'shortTime') : '-' }}</td></ng-container>
+  <ng-container matColumnDef="totalHours"><th mat-header-cell *matHeaderCellDef>Hours</th><td mat-cell *matCellDef="let r">{{ r.totalHours?.toFixed(2) || '-' }}</td></ng-container>
+  <ng-container matColumnDef="workMode"><th mat-header-cell *matHeaderCellDef>Mode</th><td mat-cell *matCellDef="let r">{{ r.workMode }}</td></ng-container>
+  <ng-container matColumnDef="actions"><th mat-header-cell *matHeaderCellDef></th><td mat-cell *matCellDef="let r"></td></ng-container>
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>

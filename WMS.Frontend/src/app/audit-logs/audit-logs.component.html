@@ -1,0 +1,76 @@
+<div class="page-header">
+  <div class="header-text">
+    <h1><mat-icon class="header-icon">history</mat-icon> System Audit Logs</h1>
+    <p class="subtitle">Complete audit history of system mutations, actions, and entities.</p>
+  </div>
+  <button mat-raised-button color="primary" (click)="load()">
+    <mat-icon>refresh</mat-icon> Refresh Logs
+  </button>
+</div>
+
+@if (error) {
+  <div class="error-banner">
+    <mat-icon>error_outline</mat-icon>
+    <span>{{ error }}</span>
+  </div>
+}
+
+@if (loading) {
+  <div class="state-message">
+    <mat-icon>hourglass_empty</mat-icon>
+    <span>Loading audit logs...</span>
+  </div>
+} @else if (logs.length === 0) {
+  <div class="state-message">
+    <mat-icon>inbox</mat-icon>
+    <span>No audit logs recorded yet.</span>
+  </div>
+} @else {
+  <div class="table-wrapper">
+    <table mat-table [dataSource]="logs" class="data-table">
+      <!-- Timestamp Column -->
+      <ng-container matColumnDef="createdOn">
+        <th mat-header-cell *matHeaderCellDef>Timestamp</th>
+        <td mat-cell *matCellDef="let row">{{ row.createdOn | date:'MMM d, y, h:mm:ss a' }}</td>
+      </ng-container>
+
+      <!-- Username Column -->
+      <ng-container matColumnDef="username">
+        <th mat-header-cell *matHeaderCellDef>Performed By</th>
+        <td mat-cell *matCellDef="let row">
+          <div class="user-cell">
+            <span class="username">{{ row.username }}</span>
+            <span class="user-id">ID: {{ row.createdBY }}</span>
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- Action Column -->
+      <ng-container matColumnDef="action">
+        <th mat-header-cell *matHeaderCellDef>Action</th>
+        <td mat-cell *matCellDef="let row">
+          <span class="action-badge" [class.insert]="row.action === 'Insert' || row.action === 'insert' || row.action === 'Create' || row.action === 'create'"
+                                       [class.update]="row.action === 'Update' || row.action === 'update' || row.action === 'Edit' || row.action === 'edit'"
+                                       [class.delete]="row.action === 'Delete' || row.action === 'delete' || row.action === 'Remove' || row.action === 'remove'">
+            {{ row.action }}
+          </span>
+        </td>
+      </ng-container>
+
+      <!-- Entity Name Column -->
+      <ng-container matColumnDef="entityName">
+        <th mat-header-cell *matHeaderCellDef>Entity / Table</th>
+        <td mat-cell *matCellDef="let row"><strong class="entity-cell">{{ row.entityName }}</strong></td>
+      </ng-container>
+
+      <!-- Record ID Column -->
+      <ng-container matColumnDef="recordId">
+        <th mat-header-cell *matHeaderCellDef>Record ID</th>
+        <td mat-cell *matCellDef="let row">{{ row.recordId }}</td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </div>
+}

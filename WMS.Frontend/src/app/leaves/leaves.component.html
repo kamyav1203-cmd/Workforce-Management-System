@@ -1,0 +1,148 @@
+<div class="page-header">
+  <div>
+    <h1>Leave Management</h1>
+    <p class="header-sub">Apply, track and manage employee leave requests</p>
+  </div>
+  <button mat-raised-button color="primary" (click)="openForm()">
+    <mat-icon>add</mat-icon> Apply Leave
+  </button>
+</div>
+
+@if (showForm) {
+  <mat-card class="form-card">
+    <h3><mat-icon style="vertical-align:middle;margin-right:8px;color:#7c3aed">beach_access</mat-icon>New Leave Request</h3>
+    <form [formGroup]="form" class="form-grid">
+      <mat-form-field appearance="outline">
+        <mat-label>Employee</mat-label>
+        <mat-select formControlName="empId">
+          @for (e of employees; track e.employeeId) {
+            <mat-option [value]="e.employeeId">{{ e.firstName }} {{ e.lastName }}</mat-option>
+          }
+        </mat-select>
+        <mat-error>Employee is required</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Leave Type</mat-label>
+        <mat-select formControlName="leaveType">
+          <mat-option value="Sick">🤒 Sick Leave</mat-option>
+          <mat-option value="Casual">🌴 Casual Leave</mat-option>
+          <mat-option value="Earned">⭐ Earned Leave</mat-option>
+        </mat-select>
+        <mat-error>Leave type is required</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>From Date</mat-label>
+        <input matInput type="date" formControlName="fromDate">
+        <mat-error>From date is required</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>To Date</mat-label>
+        <input matInput type="date" formControlName="toDate">
+        <mat-error>To date is required</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Reason (optional)</mat-label>
+        <textarea matInput formControlName="reason" rows="2" placeholder="Brief reason for leave..."></textarea>
+      </mat-form-field>
+
+      <div class="form-actions">
+        <button mat-raised-button color="primary" type="button" (click)="apply()" [disabled]="form.invalid || submitting">
+          <mat-icon>send</mat-icon> {{ submitting ? 'Submitting...' : 'Submit Request' }}
+        </button>
+        <button mat-button type="button" (click)="showForm=false">Cancel</button>
+      </div>
+    </form>
+  </mat-card>
+}
+
+<!-- Stats Row -->
+<div class="leave-stats">
+  <div class="stat-pill pending">
+    <mat-icon>hourglass_empty</mat-icon>
+    <span>{{ leaveCount('Pending') }} Pending</span>
+  </div>
+  <div class="stat-pill approved">
+    <mat-icon>check_circle</mat-icon>
+    <span>{{ leaveCount('Approved') }} Approved</span>
+  </div>
+  <div class="stat-pill rejected">
+    <mat-icon>cancel</mat-icon>
+    <span>{{ leaveCount('Rejected') }} Rejected</span>
+  </div>
+</div>
+
+<table mat-table [dataSource]="leaves" class="data-table">
+  <ng-container matColumnDef="leaveType">
+    <th mat-header-cell *matHeaderCellDef>Type</th>
+    <td mat-cell *matCellDef="let l">
+      <span class="leave-type-badge">{{ l.leaveType }}</span>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="employeeName">
+    <th mat-header-cell *matHeaderCellDef>Employee</th>
+    <td mat-cell *matCellDef="let l">
+      <div class="emp-cell">
+        <div class="emp-avatar">{{ l.employeeName?.charAt(0) || '?' }}</div>
+        {{ l.employeeName }}
+      </div>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="fromDate">
+    <th mat-header-cell *matHeaderCellDef>From</th>
+    <td mat-cell *matCellDef="let l">{{ l.fromDate | date:'dd MMM yyyy' }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="toDate">
+    <th mat-header-cell *matHeaderCellDef>To</th>
+    <td mat-cell *matCellDef="let l">{{ l.toDate | date:'dd MMM yyyy' }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="status">
+    <th mat-header-cell *matHeaderCellDef>Status</th>
+    <td mat-cell *matCellDef="let l">
+      <span [class]="getStatusClass(l.status)">{{ l.status }}</span>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="reason">
+    <th mat-header-cell *matHeaderCellDef>Reason</th>
+    <td mat-cell *matCellDef="let l">{{ l.reason || '—' }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="actions">
+    <th mat-header-cell *matHeaderCellDef>Actions</th>
+    <td mat-cell *matCellDef="let l">
+      @if (l.status === 'Pending') {
+        <button mat-icon-button color="warn" (click)="cancel(l.leaveId)" title="Cancel Leave">
+          <mat-icon>cancel</mat-icon>
+        </button>
+        @if (isManager() && l.empId !== auth.getUser()?.employeeId) {
+          <button mat-icon-button style="color:#16a34a" (click)="approve(l, 'Approved')" title="Approve">
+            <mat-icon>check_circle</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" (click)="approve(l, 'Rejected')" title="Reject">
+            <mat-icon>do_not_disturb</mat-icon>
+          </button>
+        }
+      }
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+  @if (leaves.length === 0) {
+    <tr class="mat-row">
+      <td [attr.colspan]="displayedColumns.length" class="empty-state">
+        <mat-icon>beach_access</mat-icon>
+        <p>No leave records found</p>
+      </td>
+    </tr>
+  }
+</table>

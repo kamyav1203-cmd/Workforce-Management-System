@@ -1,0 +1,128 @@
+<div class="page-header">
+  <div>
+    <h1>Workforce Dashboard</h1>
+    <p class="header-sub">Real-time overview of your organization</p>
+  </div>
+</div>
+
+@if (data) {
+  <div class="kpi-grid">
+    <mat-card class="kpi-card">
+      <div class="kpi-icon-wrap" style="background:linear-gradient(135deg,#ede9fe,#c4b5fd)">
+        <mat-icon style="color:#7c3aed">badge</mat-icon>
+      </div>
+      <div>
+        <h3>{{ data.totalEmployees }}</h3>
+        <p>Total Employees</p>
+      </div>
+    </mat-card>
+
+    <mat-card class="kpi-card">
+      <div class="kpi-icon-wrap" style="background:linear-gradient(135deg,#d1fae5,#6ee7b7)">
+        <mat-icon style="color:#059669">check_circle</mat-icon>
+      </div>
+      <div>
+        <h3>{{ data.activeEmployees }}</h3>
+        <p>Active Employees</p>
+      </div>
+    </mat-card>
+
+    <mat-card class="kpi-card">
+      <div class="kpi-icon-wrap" style="background:linear-gradient(135deg,#e0f2fe,#7dd3fc)">
+        <mat-icon style="color:#0284c7">corporate_fare</mat-icon>
+      </div>
+      <div>
+        <h3>{{ data.totalDepartments }}</h3>
+        <p>Departments</p>
+      </div>
+    </mat-card>
+
+    <mat-card class="kpi-card">
+      <div class="kpi-icon-wrap" style="background:linear-gradient(135deg,#fef3c7,#fde68a)">
+        <mat-icon style="color:#d97706">rocket_launch</mat-icon>
+      </div>
+      <div>
+        <h3>{{ data.activeProjects }}<span class="kpi-sub">/{{ data.totalProjects }}</span></h3>
+        <p>Active Projects</p>
+      </div>
+    </mat-card>
+
+    <mat-card class="kpi-card">
+      <div class="kpi-icon-wrap" style="background:linear-gradient(135deg,#fce7f3,#fbcfe8)">
+        <mat-icon style="color:#db2777">fingerprint</mat-icon>
+      </div>
+      <div>
+        <h3>{{ data.todayPresent }}</h3>
+        <p>Present Today</p>
+      </div>
+    </mat-card>
+
+    <mat-card class="kpi-card">
+      <div class="kpi-icon-wrap" style="background:linear-gradient(135deg,#ffe4e6,#fecdd3)">
+        <mat-icon style="color:#e11d48">person_off</mat-icon>
+      </div>
+      <div>
+        <h3>{{ data.todayAbsent }}</h3>
+        <p>Absent Today</p>
+      </div>
+    </mat-card>
+
+    <mat-card class="kpi-card">
+      <div class="kpi-icon-wrap" style="background:linear-gradient(135deg,#fee2e2,#fca5a5)">
+        <mat-icon style="color:#dc2626">beach_access</mat-icon>
+      </div>
+      <div>
+        <h3>{{ data.pendingLeaves }}</h3>
+        <p>Pending Leaves</p>
+      </div>
+    </mat-card>
+  </div>
+
+  <div class="charts-grid">
+    <mat-card class="chart-card">
+      <mat-card-header>
+        <mat-card-title>Weekly Attendance</mat-card-title>
+        <mat-card-subtitle>Check-ins per day this week</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="chart-container">
+          <canvas baseChart [data]="attendanceChart" [options]="chartOptions" type="bar"></canvas>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="chart-card">
+      <mat-card-header>
+        <mat-card-title>Leave Statistics</mat-card-title>
+        <mat-card-subtitle>Leave distribution by status</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="chart-container">
+          <canvas baseChart [data]="leaveChart" [options]="chartOptions" type="doughnut"></canvas>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+}
+
+@if (announcements.length) {
+  <mat-card class="announcements-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon style="vertical-align:middle;margin-right:8px;color:#7c3aed">campaign</mat-icon>
+        Latest Announcements
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      @for (a of announcements; track a.announcementId) {
+        <div class="announcement-item">
+          <div class="ann-dot"></div>
+          <div>
+            <strong>{{ a.title }}</strong>
+            <p>{{ a.message }}</p>
+          </div>
+        </div>
+      }
+    </mat-card-content>
+  </mat-card>
+}
