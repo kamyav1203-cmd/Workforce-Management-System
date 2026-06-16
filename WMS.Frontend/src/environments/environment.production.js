@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://your-wms-api.azurewebsites.net/api'
+  apiUrl: 'https://wms-api-78807.azurewebsites.net/api'
 };
