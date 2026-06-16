@@ -24,7 +24,7 @@ public class AttendanceService : IAttendanceService
 
     public async Task<AttendanceDto> CheckInAsync(CheckInDto dto, int userId)
     {
-        var existing = await _queryRepo.GetTodayOpenAsync(dto.EmpId);
+        var existing = await _queryRepo.GetTodayRecordAsync(dto.EmpId);
         if (existing != null)
             throw new InvalidOperationException("Employee already checked in today.");
 

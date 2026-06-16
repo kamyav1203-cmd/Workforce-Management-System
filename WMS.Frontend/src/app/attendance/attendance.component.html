@@ -19,7 +19,7 @@
         <mat-option value="Hybrid">Hybrid</mat-option>
       </mat-select>
     </mat-form-field>
-    <button mat-raised-button color="primary" (click)="checkIn()" [disabled]="openRecord">
+    <button mat-raised-button color="primary" (click)="checkIn()" [disabled]="hasCheckedInToday">
       <mat-icon>login</mat-icon> Check In
     </button>
     <button mat-raised-button color="accent" (click)="checkOut()" [disabled]="!openRecord">

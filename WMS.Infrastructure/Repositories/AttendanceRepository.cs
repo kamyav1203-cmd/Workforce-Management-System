@@ -22,4 +22,8 @@ public class AttendanceRepository : IAttendanceQueryRepository
     public async Task<Attendance?> GetTodayOpenAsync(int empId) =>
         await _context.Attendances.FirstOrDefaultAsync(a =>
             a.EmpId == empId && a.AttendanceDate.Date == DateTime.UtcNow.Date && a.CheckOut == null);
+
+    public async Task<Attendance?> GetTodayRecordAsync(int empId) =>
+        await _context.Attendances.FirstOrDefaultAsync(a =>
+            a.EmpId == empId && a.AttendanceDate.Date == DateTime.UtcNow.Date);
 }

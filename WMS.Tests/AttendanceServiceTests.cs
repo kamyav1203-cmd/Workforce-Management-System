@@ -15,7 +15,7 @@ public class AttendanceServiceTests
     {
         var unitOfWork = new Mock<IUnitOfWork>();
         var queryRepo = new Mock<IAttendanceQueryRepository>();
-        queryRepo.Setup(r => r.GetTodayOpenAsync(1)).ReturnsAsync(new Attendance { AttendanceId = 1 });
+        queryRepo.Setup(r => r.GetTodayRecordAsync(1)).ReturnsAsync(new Attendance { AttendanceId = 1 });
         var mapper = new MapperConfiguration(c => c.AddProfile<MappingProfile>()).CreateMapper();
         var audit = new AuditService(unitOfWork.Object);
         var service = new AttendanceService(unitOfWork.Object, queryRepo.Object, mapper, audit);

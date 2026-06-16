@@ -27,6 +27,7 @@ export class AttendanceComponent {
   employees = [];
   displayedColumns = ['attendanceDate', 'employeeName', 'checkIn', 'checkOut', 'totalHours', 'workMode', 'actions'];
   openRecord = null;
+  hasCheckedInToday = false;
 
   checkInForm = this.fb.group({ empId: [null], workMode: ['WFO'] });
   filterForm = this.fb.group({
@@ -43,13 +44,33 @@ export class AttendanceComponent {
     }
     this.api.getEmployees().subscribe((e) => { this.employees = e; });
     this.loadAll();
+
+    this.checkInForm.get('empId').valueChanges.subscribe(() => {
+      this.updateOpenRecord();
+    });
+  }
+
+  updateOpenRecord() {
+    const today = new Date().toISOString().split('T')[0];
+    const selectedEmpId = this.checkInForm.value.empId;
+
+    if (selectedEmpId) {
+      this.openRecord = this.records.find((a) => 
+        a.empId === selectedEmpId && !a.checkOut && a.attendanceDate?.startsWith(today)
+      );
+      this.hasCheckedInToday = this.records.some((a) => 
+        a.empId === selectedEmpId && a.attendanceDate?.startsWith(today)
+      );
+    } else {
+      this.openRecord = null;
+      this.hasCheckedInToday = false;
+    }
   }
 
   loadAll() {
     this.api.getAttendance().subscribe((r) => {
       this.records = r;
-      const today = new Date().toISOString().split('T')[0];
-      this.openRecord = r.find((a) => !a.checkOut && a.attendanceDate?.startsWith(today));
+      this.updateOpenRecord();
     });
   }
 
