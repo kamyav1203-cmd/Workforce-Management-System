@@ -89,6 +89,16 @@ export class AttendanceComponent {
       .subscribe((r) => { this.records = r; });
   }
 
+  clearFilter() {
+    const user = this.auth.getUser();
+    this.filterForm.patchValue({
+      empId: user?.employeeId || null,
+      month: new Date().getMonth() + 1,
+      year: new Date().getFullYear()
+    });
+    this.loadAll();
+  }
+
   downloadReport() {
     const v = this.filterForm.value;
     this.api.downloadTimesheet(v.empId, v.month, v.year).subscribe((blob) => {
