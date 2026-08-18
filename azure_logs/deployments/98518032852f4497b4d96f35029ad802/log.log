@@ -1,0 +1,29 @@
+2026-06-16T03:35:18.1970843Z,Updating submodules.,4c12e959-ad1f-40db-a7f7-1d150a1b0475,0
+2026-06-16T03:35:18.3064612Z,Preparing deployment for commit id '9851803285'.,7b09095a-625f-4f7a-b081-fe87a6dd1240,0
+2026-06-16T03:35:18.5409066Z,Running build. Project type: OneDeploy,0fa4d7c1-3129-4ed2-a7d3-15c68ac38045,0
+2026-06-16T03:35:18.6189651Z,Copying the manifest,895c9580-324f-4373-9c9c-a5004b7809bc,0
+2026-06-16T03:35:18.7162293Z,Clean deploying to C:\home\site\wwwroot,91e6f07a-811e-4c34-b594-179666484795,0
+2026-06-16T03:35:18.8064842Z,Generating deployment script.,941ba25e-e903-42e7-99f7-ff5851e0e661,0
+	2026-06-16T03:35:19.0408448Z,Using cached version of deployment script (command: 'azure -y --no-dot-deployment -r "C:\local\Temp\zipdeploy\extracted" -o "C:\home\site\deployments\tools" --basic --sitePath "C:\local\Temp\zipdeploy\extracted"').,,0
+2026-06-16T03:35:19.1376670Z,Running deployment command...,e0ba2953-7fd7-4ef8-9a9b-ee9d51541681,0
+	2026-06-16T03:35:19.1502232Z,Command: "C:\home\site\deployments\tools\deploy.cmd",,0
+	2026-06-16T03:35:19.9639445Z,Handling Basic Web Site deployment.,,0
+	2026-06-16T03:35:24.4291145Z,Creating app_offline.htm,,0
+	2026-06-16T03:35:24.4759917Z,KuduSync.NET from: 'C:\local\Temp\zipdeploy\extracted' to: 'C:\home\site\wwwroot',,0
+	2026-06-16T03:35:24.5541762Z,Copying file: 'WMS.API.dll',,0
+	2026-06-16T03:35:24.5697403Z,Copying file: 'WMS.API.exe',,0
+	2026-06-16T03:35:24.5853656Z,Copying file: 'WMS.API.pdb',,0
+	2026-06-16T03:35:24.6166159Z,Copying file: 'WMS.Application.dll',,0
+	2026-06-16T03:35:24.6322841Z,Copying file: 'WMS.Application.pdb',,0
+	2026-06-16T03:35:24.6653464Z,Copying file: 'WMS.Domain.dll',,0
+	2026-06-16T03:35:24.6791202Z,Copying file: 'WMS.Domain.pdb',,0
+	2026-06-16T03:35:24.6947418Z,Copying file: 'WMS.Infrastructure.dll',,0
+	2026-06-16T03:35:24.7103666Z,Copying file: 'WMS.Infrastructure.pdb',,0
+	2026-06-16T03:35:24.7417263Z,Deleting app_offline.htm,,0
+	2026-06-16T03:35:24.8041187Z,Finished successfully.,,0
+2026-06-16T03:35:24.9042762Z,Build completed succesfully.,0fd6bad3-16bb-4581-8a35-98bcb4c23a01,0
+2026-06-16T03:35:25.1053464Z,Running post deployment command(s)...,04ef554e-aa54-426f-9d37-0cc0ea71a2a3,0
+2026-06-16T03:35:25.2572490Z,Requesting site restart,23740805-0e1b-4620-8d29-ab7da65acb01,0
+2026-06-16T03:35:25.3666265Z,Requesting site restart. Attempt #1,8ddf3754-42e7-423d-a8d1-0a005ecd66be,0
+2026-06-16T03:35:27.0072739Z,Successfully requested a restart. Attempt #1,bf6d8249-c77f-4777-b67c-30c00133c2e1,0
+2026-06-16T03:35:27.1647726Z,Deployment successful.,0eecbbee-ba3b-4df6-a505-29518df11b22,0
