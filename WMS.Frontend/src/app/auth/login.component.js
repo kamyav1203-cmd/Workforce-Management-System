@@ -31,9 +31,18 @@ export class LoginComponent {
     this.loading = true;
     this.error = '';
     const { username, password } = this.form.value;
-    this.auth.login(username, password).subscribe({
+    this.auth.login(username ? username.trim() : '', password).subscribe({
       next: () => { this.loading = false; this.router.navigate(['/dashboard']); },
-      error: () => { this.loading = false; this.error = 'Invalid username or password'; }
+      error: (err) => {
+        this.loading = false;
+        if (err.status === 0) {
+          this.error = 'Unable to connect to server. Please ensure the backend API is running.';
+        } else if (err.status === 500) {
+          this.error = 'Server error occurred. Please check database connection.';
+        } else {
+          this.error = err.error?.message || 'Invalid username or password';
+        }
+      }
     });
   }
 

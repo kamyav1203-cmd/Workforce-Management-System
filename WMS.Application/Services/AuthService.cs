@@ -22,7 +22,11 @@ public class AuthService : IAuthService
 
     public async Task<LoginResponseDto?> LoginAsync(LoginRequestDto request)
     {
-        var users = await _unitOfWork.Users.FindAsync(u => u.Username == request.Username);
+        var username = request.Username?.Trim();
+        if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(request.Password))
+            return null;
+
+        var users = await _unitOfWork.Users.FindAsync(u => u.Username.ToLower() == username.ToLower());
         var user = users.FirstOrDefault();
         if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
             return null;
